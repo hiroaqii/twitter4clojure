@@ -5,17 +5,17 @@
 (def twitter (. (TwitterFactory.) getInstance))
 
 ;Timeline Resources
-(defn get_mentions_timeline []
+(defn get-mentions-timeline []
   (.getMentionsTimeline twitter))
 
-(defn get_user_timeline
+(defn get-user-timeline
   ([] (.getUserTimeline twitter))
   ([user](.getUserTimeline twitter user)))
 
-(defn get_home_timeline []
+(defn get-home-timeline []
   (.getHomeTimeline twitter))
 
-(defn get_retweets_of_me []
+(defn get-retweets-of-me []
   (.getRetweetsOfMe twitter))
 
 ;Search Resource
