@@ -1,5 +1,5 @@
 (ns twitter4clojure.core
-  (:import [twitter4j TwitterFactory])
+  (:import [twitter4j TwitterFactory Query])
     (:gen-class))
 
 (def twitter (. (TwitterFactory.) getInstance))
@@ -17,3 +17,8 @@
 
 (defn get_retweets_of_me []
   (.getRetweetsOfMe twitter))
+
+;Search Resource
+(defn search [s]
+  (let [query (Query. s)]
+    (.search twitter query)))
