@@ -18,7 +18,23 @@
 (defn get-retweets-of-me []
   (.getRetweetsOfMe twitter))
 
-;Search Resource
+;Search Resources
 (defn search [s]
   (let [query (Query. s)]
     (.search twitter query)))
+
+;Help Resources
+(defn get-api-configuration []
+  (.getAPIConfiguration twitter))
+
+(defn get-languages []
+  (.getLanguages twitter))
+
+(defn get-privacy-policy []
+  (.getPrivacyPolicy twitter))
+
+(defn get-terms-of-service []
+  (.getTermsOfService twitter))
+
+(defn get-rate-limit-status []
+  (.getRateLimitStatus twitter))
