@@ -23,6 +23,10 @@
   (let [query (Query. s)]
     (.search twitter query)))
 
+;Spam Reporting Resource
+(defn report-spam [screen-name]
+  (.reportSpam twitter screen-name))
+
 ;Help Resources
 (defn get-api-configuration []
   (.getAPIConfiguration twitter))
