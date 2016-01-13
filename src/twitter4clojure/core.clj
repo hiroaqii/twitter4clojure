@@ -1,5 +1,5 @@
 (ns twitter4clojure.core
-  (:import [twitter4j TwitterFactory Query])
+  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery])
     (:gen-class))
 
 (def twitter (. (TwitterFactory.) getInstance))
@@ -22,6 +22,17 @@
 (defn search [s]
   (let [query (Query. s)]
     (.search twitter query)))
+
+;Trends Resources
+(defn get-place-trends [woeid]
+  (.getPlaceTrends twitter woeid))
+
+(defn get-available-trends []
+  (.getAvailableTrends twitter))
+
+(defn getClosestTrends [latitude longitude]
+  (let [location (GeoLocation. latitude longitude)]
+      (.getClosestTrends twitter location)))
 
 ;Spam Reporting Resource
 (defn report-spam [screen-name]
