@@ -23,6 +23,18 @@
   (let [query (Query. s)]
     (.search twitter query)))
 
+;Places & Geo Resourcs
+(defn get-geo-details [place-id]
+  (.getGeoDetails twitter place-id))
+
+(defn reverse-geo-code [latitude longitude]
+  (let [query (GeoQuery. (GeoLocation. latitude longitude))]
+    (.reverseGeoCode twitter query)))
+
+(defn search-places [latitude longitude]
+  (let [query (GeoQuery. (GeoLocation. latitude longitude))]
+    (.searchPlaces twitter query)))
+
 ;Trends Resources
 (defn get-place-trends [woeid]
   (.getPlaceTrends twitter woeid))
