@@ -2,66 +2,71 @@
   (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery])
     (:gen-class))
 
-(def twitter (. (TwitterFactory.) getInstance))
+(def twitter-instance (. (TwitterFactory.) getInstance))
+
+(defmacro twitter [f]
+  `(-> (. (TwitterFactory.) getInstance)
+      ~f
+      (data/from-java)))
 
 ;Timeline Resources
 (defn get-mentions-timeline []
-  (.getMentionsTimeline twitter))
+  (twitter (.getMentionsTimeline)))
 
 (defn get-user-timeline
-  ([] (.getUserTimeline twitter))
-  ([user](.getUserTimeline twitter user)))
+  ([] (twitter (.getUserTimeline)))
+  ([^String user] (twitter (.getUserTimeline user))))
 
 (defn get-home-timeline []
-  (.getHomeTimeline twitter))
+  (twitter (.getHomeTimeline )))
 
 (defn get-retweets-of-me []
-  (.getRetweetsOfMe twitter))
+  (twitter (.getRetweetsOfMe )))
 
 ;Search Resources
 (defn search [s]
   (let [query (Query. s)]
-    (.search twitter query)))
+    (twitter (.search query))))
 
 ;Places & Geo Resourcs
 (defn get-geo-details [place-id]
-  (.getGeoDetails twitter place-id))
+  (twitter (.getGeoDetails place-id)))
 
 (defn reverse-geo-code [latitude longitude]
   (let [query (GeoQuery. (GeoLocation. latitude longitude))]
-    (.reverseGeoCode twitter query)))
+    (twitter (.reverseGeoCode query))))
 
 (defn search-places [latitude longitude]
   (let [query (GeoQuery. (GeoLocation. latitude longitude))]
-    (.searchPlaces twitter query)))
+    (twitter (.searchPlaces query))))
 
 ;Trends Resources
 (defn get-place-trends [woeid]
-  (.getPlaceTrends twitter woeid))
+  (twitter (.getPlaceTrends woeid)))
 
 (defn get-available-trends []
-  (.getAvailableTrends twitter))
+  (twitter (.getAvailableTrends)))
 
 (defn getClosestTrends [latitude longitude]
   (let [location (GeoLocation. latitude longitude)]
-      (.getClosestTrends twitter location)))
+    (twitter (.getClosestTrends location))))
 
 ;Spam Reporting Resource
 (defn report-spam [screen-name]
-  (.reportSpam twitter screen-name))
+  (twitter (.reportSpam screen-name)))
 
 ;Help Resources
 (defn get-api-configuration []
-  (.getAPIConfiguration twitter))
+  (twitter (.getAPIConfiguration)))
 
 (defn get-languages []
-  (.getLanguages twitter))
+  (twitter (.getLanguages)))
 
 (defn get-privacy-policy []
-  (.getPrivacyPolicy twitter))
+  (twitter (.getPrivacyPolicy )))
 
 (defn get-terms-of-service []
-  (.getTermsOfService twitter))
+  (twitter (.getTermsOfService)))
 
 (defn get-rate-limit-status []
-  (.getRateLimitStatus twitter))
+  (twitter (.getRateLimitStatus)))
