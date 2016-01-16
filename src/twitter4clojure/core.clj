@@ -28,6 +28,16 @@
   (let [query (Query. s)]
     (twitter (.search query))))
 
+;Favorites Resources
+(defn get-favorites []
+  (twitter (.getFavorites)))
+
+(defn destroy-favorite [status-id]
+  (twitter (.destroyFavorite status-id)))
+
+(defn create-favorite [status-id]
+  (twitter (.createFavorite status-id)))
+
 ;Saved Searches Resources
 (defn get-saved-searches []
   (twitter (.getSavedSearches)))
