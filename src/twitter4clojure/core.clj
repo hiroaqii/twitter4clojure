@@ -28,6 +28,19 @@
   (let [query (Query. s)]
     (twitter (.search query))))
 
+;Saved Searches Resources
+(defn get-saved-searches []
+  (twitter (.getSavedSearches)))
+
+(defn show-saved-search [saved-search-id]
+  (twitter (.showSavedSearch saved-search-id)))
+
+(defn create-saved-search [^String query]
+  (twitter (.createSavedSearch query)))
+
+(defn destroySavedSearch [saved-search-id]
+  (twitter (.destroySavedSearch saved-search-id)))
+
 ;Places & Geo Resourcs
 (defn get-geo-details [place-id]
   (twitter (.getGeoDetails place-id)))
