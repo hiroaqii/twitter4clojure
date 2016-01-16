@@ -35,10 +35,10 @@
 (defn get-sent-direct-messages []
   (twitter (.getSentDirectMessages)))
 
-(defn showDirectMessage [direct-message-id]
+(defn show-direct-message [direct-message-id]
   (twitter (.showDirectMessage [direct-message-id])))
 
-(defn destroyDirectMessage [direct-message-id]
+(defn destroy-direct-message [direct-message-id]
   (twitter (.destroyDirectMessage direct-message-id)))
 
 (defn send-direct-message [user-id text]
@@ -74,7 +74,7 @@
 (defn create-saved-search [^String query]
   (twitter (.createSavedSearch query)))
 
-(defn destroySavedSearch [saved-search-id]
+(defn destroy-saved-search [saved-search-id]
   (twitter (.destroySavedSearch saved-search-id)))
 
 ;Places & Geo Resourcs
