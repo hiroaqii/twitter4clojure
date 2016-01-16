@@ -28,6 +28,16 @@
   (let [query (Query. s)]
     (twitter (.search query))))
 
+;Suggested Users Resources
+(defn get-user-suggestions [category-slug]
+  (twitter (.getUserSuggestions category-slug)))
+
+(defn get-suggested-user-categories []
+  (twitter (.getSuggestedUserCategories)))
+
+(defn get-member-suggestions [category-slug]
+  (twitter (.getMemberSuggestions category-slug)))
+
 ;Favorites Resources
 (defn get-favorites []
   (twitter (.getFavorites)))
