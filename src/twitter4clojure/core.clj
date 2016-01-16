@@ -47,7 +47,7 @@
 (defn get-available-trends []
   (twitter (.getAvailableTrends)))
 
-(defn getClosestTrends [latitude longitude]
+(defn get-closest-trends [latitude longitude]
   (let [location (GeoLocation. latitude longitude)]
     (twitter (.getClosestTrends location))))
 
