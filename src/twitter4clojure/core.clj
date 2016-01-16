@@ -28,6 +28,22 @@
   (let [query (Query. s)]
     (twitter (.search query))))
 
+;Direct Message Resources
+(defn get-direct-messages []
+  (twitter (.getDirectMessages)))
+
+(defn get-sent-direct-messages []
+  (twitter (.getSentDirectMessages)))
+
+(defn showDirectMessage [direct-message-id]
+  (twitter (.showDirectMessage [direct-message-id])))
+
+(defn destroyDirectMessage [direct-message-id]
+  (twitter (.destroyDirectMessage direct-message-id)))
+
+(defn send-direct-message [user-id text]
+  (twitter (.getsendDirectMessage user-id text)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
