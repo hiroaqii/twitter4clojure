@@ -1,5 +1,5 @@
 (ns twitter4clojure.core
-  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery])
+  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest])
     (:gen-class))
 
 (def twitter-instance (. (TwitterFactory.) getInstance))
@@ -22,6 +22,34 @@
 
 (defn get-retweets-of-me []
   (twitter (.getRetweetsOfMe )))
+
+;Tweets Resources
+(defn get-retweets [status-id]
+  (twitter (.getRetweets status-id)))
+
+(defn get-retweeter-ids
+  ([status-id cursor]
+   (twitter (.getRetweeterIds status-id cursor)))
+  ([status-id count cursor]
+   (twitter (.getRetweeterIds status-id cursor))))
+
+(defn show-status [status-id]
+  (twitter (.showStatus status-id)))
+
+(defn destroy-status [status-id]
+  (twitter (.getdestroyStatus status-id)))
+
+(defn update-status [^String status]
+  (twitter (.updateStatus status)))
+
+(defn retweetStatus [status-id]
+  (twitter (.getretweetStatus status-id)))
+
+(defn get-o-embed [status-id url]
+  (twitter (.getOEmbed (OEmbedRequest. status-id url))))
+
+(defn upload-media [^java.io.File media-file]
+  (twitter (.uploadMedia media-file)))
 
 ;Search Resources
 (defn search [s]
