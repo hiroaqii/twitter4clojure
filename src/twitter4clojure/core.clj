@@ -1,4 +1,5 @@
 (ns twitter4clojure.core
+  (:require [clojure.java.data :as data])
   (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest])
     (:gen-class))
 
@@ -71,6 +72,16 @@
 
 (defn send-direct-message [user-id text]
   (twitter (.getsendDirectMessage user-id text)))
+
+;Friends & Followers
+(defn get-friends-ids
+  [& {:keys [user-id screen-name cnt cursor] :or {cursor -1} :as all}]
+  (cond
+    (and user-id cnt)     (twitter (.getFriendsIDs user-id cursor cnt))
+    (some? user-id)       (twitter (.getFriendsIDs user-id cursor))
+    (and screen-name cnt) (twitter (.getFriendsIDs screen-name cursor cnt))
+    (some? screen-name)   (twitter (.getFriendsIDs screen-name cursor))
+    :else                 (twitter (.getFriendsIDs cursor))))
 
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
