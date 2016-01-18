@@ -83,6 +83,15 @@
     (some? screen-name)   (twitter (.getFriendsIDs screen-name cursor))
     :else                 (twitter (.getFriendsIDs cursor))))
 
+(defn get-followers-ids
+  [& {:keys [user-id screen-name cnt cursor] :or {cursor -1} :as all}]
+  (cond
+    (and user-id cnt)     (twitter (.getFollowersIDs user-id cursor cnt))
+    (some? user-id)       (twitter (.getFollowersIDs user-id cursor))
+    (and screen-name cnt) (twitter (.getFollowersIDs screen-name cursor cnt))
+    (some? screen-name)   (twitter (.getFollowersIDs screen-name cursor))
+    :else                 (twitter (.getFollowersIDs cursor))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
