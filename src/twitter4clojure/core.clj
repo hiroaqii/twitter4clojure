@@ -96,6 +96,10 @@
   ([] (get-incoming-friendships -1))
   ([cursor](twitter (.getIncomingFriendships cursor))))
 
+(defn get-outgoing-friendships
+  ([] (get-outgoing-friendships -1))
+  ([cursor] (twitter (.getOutgoingFriendships cursor))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
