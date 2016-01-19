@@ -92,6 +92,10 @@
     (some? screen-name)   (twitter (.getFollowersIDs screen-name cursor))
     :else                 (twitter (.getFollowersIDs cursor))))
 
+(defn get-incoming-friendships
+  ([] (get-incoming-friendships -1))
+  ([cursor](twitter (.getIncomingFriendships cursor))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
