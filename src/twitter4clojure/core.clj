@@ -100,6 +100,11 @@
   ([] (get-outgoing-friendships -1))
   ([cursor] (twitter (.getOutgoingFriendships cursor))))
 
+(defn create-friendship
+  [& {:keys [user-id screen-name follow] :or {follow false} :as all}]
+  (let [id-or-name (if (nil? user-id) screen-name user-id)]
+    (twitter (.createFriendship id-or-name follow))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
