@@ -105,6 +105,9 @@
   (let [id-or-name (if (nil? user-id) screen-name user-id)]
     (twitter (.createFriendship id-or-name follow))))
 
+(defn destroy-friendship [id-or-name]
+  (twitter (.destroyFriendship id-or-name)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
