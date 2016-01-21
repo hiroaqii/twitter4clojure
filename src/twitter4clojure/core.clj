@@ -113,6 +113,10 @@
   (let [id-or-name (if (nil? user-id) screen-name user-id)]
     (twitter (.updateFriendship id-or-name enable-device-notification retweets))))
 
+(defn show-friendship
+  [source target]
+  (twitter (.showFriendship source target)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
