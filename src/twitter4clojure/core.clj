@@ -108,6 +108,11 @@
 (defn destroy-friendship [id-or-name]
   (twitter (.destroyFriendship id-or-name)))
 
+(defn update-friendship
+  [& {:keys [user-id screen-name enable-device-notification retweets] :or {enable-device-notification false retweets false} :as all}]
+  (let [id-or-name (if (nil? user-id) screen-name user-id)]
+    (twitter (.updateFriendship id-or-name enable-device-notification retweets))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
