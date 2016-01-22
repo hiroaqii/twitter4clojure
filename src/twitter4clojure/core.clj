@@ -117,6 +117,14 @@
   [source target]
   (twitter (.showFriendship source target)))
 
+(defn get-friends-list
+  [& {:keys [user-id screen-name cursor cnt skip-status include-user-entities]
+      :or   {cursor -1 cnt 20 skip-status false include-user-entities false}
+      :as    all}]
+  (twitter
+   (.getFriendsList
+    (if user-id user-id screen-name) cursor cnt skip-status include-user-entities)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
