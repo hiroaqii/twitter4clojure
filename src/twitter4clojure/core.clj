@@ -125,6 +125,14 @@
    (.getFriendsList
     (if user-id user-id screen-name) cursor cnt skip-status include-user-entities)))
 
+(defn get-followers-list
+  [& {:keys [user-id screen-name cursor cnt skip-status include-user-entities]
+      :or   {cursor -1 cnt 20 skip-status false include-user-entities false}
+      :as    all}]
+  (twitter
+   (.getFollowersList
+    (if user-id user-id screen-name) cursor cnt skip-status include-user-entities)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
