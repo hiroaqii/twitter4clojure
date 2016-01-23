@@ -137,6 +137,9 @@
 (defn get-account-settings []
   (twitter (.getAccountSettings)))
 
+(defn verify-credentials []
+  (twitter (.verifyCredentials)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
