@@ -133,6 +133,10 @@
    (.getFollowersList
     (if user-id user-id screen-name) cursor cnt skip-status include-user-entities)))
 
+;Users Resources
+(defn get-account-settings []
+  (twitter (.getAccountSettings)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
