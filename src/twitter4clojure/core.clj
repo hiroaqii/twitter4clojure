@@ -140,6 +140,9 @@
 (defn verify-credentials []
   (twitter (.verifyCredentials)))
 
+(defn get-blocks-list []
+  (twitter (.getBlocksList)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
