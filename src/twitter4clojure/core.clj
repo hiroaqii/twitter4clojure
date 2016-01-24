@@ -146,6 +146,9 @@
 (defn get-blocks-ids []
   (twitter (.getBlocksIDs)))
 
+(defn create-block [id-or-name]
+  (twitter (.createBlock id-or-name)))
+
 (defn show-user [user-id]
   (twitter (.showUser user-id)))
 
