@@ -143,6 +143,9 @@
 (defn get-blocks-list []
   (twitter (.getBlocksList)))
 
+(defn get-blocks-ids []
+  (twitter (.getBlocksIDs)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
