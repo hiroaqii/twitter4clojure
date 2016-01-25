@@ -158,6 +158,9 @@
 (defn search-users [query page]
   (twitter (.searchUsers query page)))
 
+(defn get-contributees [id-or-name]
+  (twitter (.getContributees id-or-name)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
