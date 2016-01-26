@@ -161,6 +161,9 @@
 (defn get-contributees [id-or-name]
   (twitter (.getContributees id-or-name)))
 
+(defn get-contributors [id-or-name]
+  (twitter (.getContributors id-or-name)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
