@@ -164,6 +164,9 @@
 (defn get-contributors [id-or-name]
   (twitter (.getContributors id-or-name)))
 
+(defn remove-profile-banner []
+  (twitter (.removeProfileBanner)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
