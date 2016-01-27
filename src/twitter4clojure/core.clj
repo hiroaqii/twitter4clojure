@@ -167,6 +167,9 @@
 (defn remove-profile-banner []
   (twitter (.removeProfileBanner)))
 
+(defn update-profile-banner [image]
+  (twitter (.updateProfileBanner image)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
