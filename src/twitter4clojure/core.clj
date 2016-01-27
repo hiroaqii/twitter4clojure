@@ -170,6 +170,9 @@
 (defn update-profile-banner [image]
   (twitter (.updateProfileBanner image)))
 
+(defn create-mute [id-or-name]
+  (twitter (.createMute id-or-name)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
