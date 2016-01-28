@@ -173,6 +173,9 @@
 (defn create-mute [id-or-name]
   (twitter (.createMute id-or-name)))
 
+(defn destroy-mute [id-or-name]
+  (twitter (.destroyMute id-or-name)))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
