@@ -178,6 +178,10 @@
   ([] (get-mutes-ids -1))
   ([cursor] (twitter (.getMutesIDs cursor))))
 
+(defn get-mutes-list
+  ([] (get-mutes-list -1))
+  ([cursor] (twitter (.getMutesList cursor))))
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
