@@ -29,8 +29,8 @@
 (defn get-retweeter-ids
   ([status-id cursor]
    (twitter (.getRetweeterIds status-id cursor)))
-  ([status-id count cursor]
-   (twitter (.getRetweeterIds status-id cursor))))
+  ([status-id cnt cursor]
+   (twitter (.getRetweeterIds status-id cnt cursor))))
 
 (defn show-status [status-id]
   (twitter (.showStatus status-id)))
@@ -38,7 +38,7 @@
 (defn destroy-status [status-id]
   (twitter (.getdestroyStatus status-id)))
 
-(defn update-status [^String status]
+(defn update-status [status]
   (twitter (.updateStatus status)))
 
 (defn retweetStatus [status-id]
