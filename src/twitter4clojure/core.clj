@@ -6,9 +6,7 @@
 (def twitter-instance (. (TwitterFactory.) getInstance))
 
 (defmacro twitter [f]
-  `(-> (. (TwitterFactory.) getInstance)
-      ~f
-      (data/from-java)))
+  `(-> twitter-instance ~f (data/from-java)))
 
 ;Timeline Resources
 (defn get-mentions-timeline []
