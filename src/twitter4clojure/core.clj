@@ -1,6 +1,6 @@
 (ns twitter4clojure.core
   (:require [clojure.java.data :as data])
-  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest])
+  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging])
     (:gen-class))
 
 (def twitter-instance (. (TwitterFactory.) getInstance))
@@ -201,6 +201,103 @@
 
 (defn create-favorite [status-id]
   (twitter (.createFavorite status-id)))
+
+;Lists Resources
+(defn get-user-lists
+  ([id-or-name] (get-user-lists id-or-name false))
+  ([id-or-name reverse] (twitter (.getUserLists id-or-name reverse))))
+
+(defn get-user-list-statuses
+  ([id ^Paging paging]
+   (twitter (.getUserListStatuses id paging)))
+  ([id-or-name slug ^Paging paging]
+   (twitter (.getUserListStatuses id-or-name slug paging))))
+
+(defn destroy-user-list-member
+  ([list-id id-or-name]
+   (twitter (.destroyUserListMember list-id id-or-name)))
+  ([id-or-name slug user-id]
+   (twitter (.destroyUserListMember id-or-name slug user-id))))
+
+(defn get-user-list-memberships
+  [& {:keys [list-id screen-name cnt cursor filter-to-owned-lists]
+      :or {cnt 20 cursor -1 filter-to-owned-lists false} :as all}]
+  (let [id-or-name (if (nil? list-id) screen-name list-id)]
+    (if (nil? id-or-name)
+      (twitter (.getUserListMemberships cnt cursor))
+      (twitter (.getUserListMemberships list-id cnt cursor filter-to-owned-lists )))))
+
+(defn get-user-list-subscribers
+  [& {:keys [list-id owner-id screen-name slug cnt cursor skip-status]
+      :or {cnt 20 cursor -1 skip-status false} :as all}]
+  (if (not= list-id nil)
+    (twitter (.getUserListSubscribers list-id cnt cursor skip-status))
+    (let [id-or-name (if (nil? owner-id) screen-name owner-id)]
+      (twitter (.getUserListSubscribers id-or-name slug cnt cursor skip-status)))))
+
+(defn create-user-list-subscription
+  ([list-id]
+   (twitter (.createUserListSubscription list-id)))
+  ([id-or-name slug]
+   (twitter (.createUserListSubscription id-or-name slug))))
+
+(defn show-user-list-subscription
+  ([list-id user-id]
+   (twitter (.showUserListSubscription list-id user-id)))
+  ([id-or-name slug user-id]
+   (twitter (.showUserListSubscription id-or-name slug user-id))))
+
+(defn destroy-userList-subscription
+  ([list-id]
+   (twitter (.destroyUserListSubscription list-id)))
+  ([id-or-name slug]
+   (twitter (.destroyUserListSubscription id-or-name slug))))
+
+(defn show-user-list-membership
+  ([list-id user-id]
+   (twitter (.showUserListMembership list-id user-id)))
+  ([id-or-name slug user-id]
+   (twitter (.showUserListMembership id-or-name slug user-id))))
+
+(defn get-user-list-members
+  [& {:keys [list-id owner-id screen-name slug cnt cursor skip-status]
+      :or {cnt 20 cursor -1 skip-status false} :as all}]
+  (if (not= list-id nil)
+    (twitter (.getUserListMembers list-id cnt cursor skip-status))
+    (let [id-or-name (if (nil? owner-id) screen-name owner-id)]
+      (twitter (.getUserListMembers id-or-name slug cnt cursor skip-status)))))
+
+(defn create-user-list-member
+  ([list-id user-id]
+   (twitter (.createUserListMember list-id user-id)))
+  ([id-or-name slug user-id]
+   (twitter (.createUserListMember id-or-name slug user-id))))
+
+(defn destroy-user-list
+  ([list-id] (twitter (.destroyUserList list-id)))
+  ([id-or-name slug] (twitter (.destroyUserList id-or-name slug))))
+
+(defn update-user-list
+  ([list-id new-list-name is-public-list new-desc]
+   (twitter (.updateUserList list-id new-list-name is-public new-desc)))
+  ([id-or-name slug new-list-name is-public-list new-desc]
+   (twitter (.updateUserList id-or-name slug new-list-name is-public new-desc))))
+
+(defn create-user-list
+  [list-name is-public desc]
+  (twitter (.createUserList list-name is-public desc)))
+
+(defn show-user-list
+  ([list-id] (twitter (.showUserList list-id)))
+  ([owner-id slug] (twitter (.showUserList owner-id slug))))
+
+(defn get-user-list-subscriptions
+  ([id-or-name]
+   (get-user-list-subscriptions id-or-name -1))
+  ([id-or-name cursor]
+   (get-user-list-subscriptions id-or-name 20 cursor))
+  ([id-or-name cnt cursor]
+   (twitter (.getUserListSubscriptions id-or-name cnt cursor))))
 
 ;Saved Searches Resources
 (defn get-saved-searches []
