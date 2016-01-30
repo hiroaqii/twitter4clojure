@@ -1,6 +1,6 @@
 (ns twitter4clojure.core
   (:require [clojure.java.data :as data])
-  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging])
+  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging StatusUpdate])
     (:gen-class))
 
 (def twitter-instance (. (TwitterFactory.) getInstance))
@@ -21,6 +21,28 @@
     (not-nil? page)                (Paging. page)
     (not-nil? since-id)            (Paging. since-id)
     :else                          (Paging.)))
+
+(defn make-status-update
+  [^String status &
+   {:keys
+    [^Boolean display-coordinates
+     ^Boolean possibly-sensitive
+     ^Long in-reply-to-status-id
+     ^String place-id
+     ^java.io.File file
+     ^GeoLocation location]
+    :or
+    {display-coordinates false
+     in-reply-to-status-id -1
+     possibly-sensitive false}}]
+  (let [status-update (StatusUpdate. status)]
+    (-> status-update
+        (.displayCoordinates display-coordinates)
+        (.possiblySensitive possibly-sensitive)
+        (.inReplyToStatusId in-reply-to-status-id)
+        (.placeId place-id)
+        (.media file)
+        (.location location))))
 
 
 
