@@ -349,6 +349,16 @@
   ([id-or-name slug]
    (twitter (.destroyUserListSubscription id-or-name slug))))
 
+(defn create-user-list-members
+  ([list-id ids-or-names]
+   (let [clazz (class (first ids-or-names))
+         array (into-array (if (= clazz String) String Long) ids-or-names)]
+     (twitter (.createUserListMembers list-id array))))
+  ([ownerid-or-ownernae slug userids-or-screennames]
+   (let [clazz (class (first userids-or-screennames))
+         array (into-array (if (= clazz String) String Long) userids-or-screennames)]
+        (twitter (.createUserListMembers ownerid-or-ownernae slug array)))))
+
 (defn show-user-list-membership
   ([list-id user-id]
    (twitter (.showUserListMembership list-id user-id)))
