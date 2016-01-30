@@ -8,25 +8,49 @@
 (defmacro twitter [f]
   `(-> twitter-instance ~f (data/from-java)))
 
+(def not-nil? (complement nil?))
+
+;;Maek Entyty Object
+(defn make-paging
+  [& {:keys [page cnt since-id max-id] :as all}]
+  (cond
+    (and page cnt since-id max-id) (Paging. page cnt since-id max-id)
+    (and page cnt since-id)        (Paging. page cnt since-id)
+    (and page cnt)                 (Paging. page cnt)
+    (and page since-id)            (Paging. page since-id)
+    (not-nil? page)                (Paging. page)
+    (not-nil? since-id)            (Paging. since-id)
+    :else                          (Paging.)))
+
 ;Timeline Resources
-(defn get-mentions-timeline []
-  (twitter (.getMentionsTimeline)))
+(defn get-mentions-timeline
+  ([](twitter (.getMentionsTimeline)))
+  ([^Paging paging] (twitter (.getMentionsTimeline paging))))
 
 (defn get-user-timeline
-  ([] (twitter (.getUserTimeline)))
-  ([^String user] (twitter (.getUserTimeline user))))
+  [& {:keys [user-id screen-name ^Paging paging] :as all}]
+  (let [id-or-name (if user-id user-id screen-name)]
+    (cond
+      (nil? all) (twitter (.getUserTimeline))
+      (and id-or-name paging) (twitter (.getUserTimeline id-or-name paging))
+      (not-nil? id-or-name)   (twitter (.getUserTimeline id-or-name))
+      :else                   (twitter (.getUserTimeline paging)))))
 
-(defn get-home-timeline []
-  (twitter (.getHomeTimeline )))
+(defn get-home-timeline
+  ([] (twitter (.getHomeTimeline)))
+  ([^Paging paging] (twitter (.getHomeTimeline paging))))
 
-(defn get-retweets-of-me []
-  (twitter (.getRetweetsOfMe )))
+(defn get-retweets-of-me
+  ([](twitter (.getRetweetsOfMe)))
+  ([^Paging paging] (twitter (.getRetweetsOfMe))))
 
 ;Tweets Resources
 (defn get-retweets [status-id]
   (twitter (.getRetweets status-id)))
 
 (defn get-retweeter-ids
+  ([status-id]
+   (get-retweeter-ids -1))
   ([status-id cursor]
    (twitter (.getRetweeterIds status-id cursor)))
   ([status-id cnt cursor]
