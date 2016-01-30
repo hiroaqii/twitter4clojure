@@ -1,6 +1,6 @@
 (ns twitter4clojure.core
   (:require [clojure.java.data :as data])
-  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging StatusUpdate OEmbedRequest OEmbedRequest$Align])
+  (:import [twitter4j TwitterFactory Query Query$ResultType GeoLocation GeoQuery OEmbedRequest Paging StatusUpdate OEmbedRequest OEmbedRequest$Align])
     (:gen-class))
 
 (def twitter-instance (. (TwitterFactory.) getInstance))
@@ -37,7 +37,7 @@
 (defn make-o-embed-request
   [status-id url &
    {:keys [hide-media hide-thread omit-script lang max-width align related]
-    :or   {hide-media true  hide-thread true  omit-script false  max-width 0  align OEmbedRequest$Align/NONE} related []}]
+    :or   {hide-media true  hide-thread true  omit-script false  max-width 0  align OEmbedRequest$Align/NONE related []}}]
   (-> (OEmbedRequest. status-id url)
                 (.HideMedia hide-media)
                 (.HideThread hide-thread)
@@ -46,6 +46,19 @@
                 (.MaxWidth max-width)
                 (.align align)
                 (.related (into-array String related))))
+
+(defn make-query
+  [s & {:keys [cnt max-id since-id lang locale since until result-type]
+        :or {cnt -1 max-id -1 since-id -1 result-type Query$ResultType/mixed}}]
+  (-> (Query. s)
+      (.count cnt)
+      (.maxId max-id)
+      (.sinceId since-id)
+      (.lang lang)
+      (.locale locale)
+      (.since since)
+      (.until until)
+      (.resultType result-type)))
 
 
 
@@ -109,9 +122,10 @@
 
 
 ;Search Resources
-(defn search [s]
-  (let [query (Query. s)]
-    (twitter (.search query))))
+(defn search [query]
+  (if (= (class query) Query)
+    (twitter (.search query))
+    (twitter (.search (Query. (str query))))))
 
 
 
@@ -217,8 +231,8 @@
 (defn show-user [user-id]
   (twitter (.showUser user-id)))
 
-(defn search-users [^String query ^Integer page]
-  (twitter (.searchUsers query page)))
+(defn search-users [s page]
+  (twitter (.searchUsers s page)))
 
 (defn get-contributees [id-or-name]
   (twitter (.getContributees id-or-name)))
@@ -384,8 +398,8 @@
 (defn show-saved-search [saved-search-id]
   (twitter (.showSavedSearch saved-search-id)))
 
-(defn create-saved-search [^String query]
-  (twitter (.createSavedSearch query)))
+(defn create-saved-search [s]
+  (twitter (.createSavedSearch s)))
 
 (defn destroy-saved-search [saved-search-id]
   (twitter (.destroySavedSearch saved-search-id)))
