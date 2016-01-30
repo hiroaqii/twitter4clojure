@@ -1,6 +1,6 @@
 (ns twitter4clojure.core
   (:require [clojure.java.data :as data])
-  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging StatusUpdate])
+  (:import [twitter4j TwitterFactory Query GeoLocation GeoQuery OEmbedRequest Paging StatusUpdate OEmbedRequest OEmbedRequest$Align])
     (:gen-class))
 
 (def twitter-instance (. (TwitterFactory.) getInstance))
@@ -24,25 +24,28 @@
 
 (defn make-status-update
   [^String status &
-   {:keys
-    [^Boolean display-coordinates
-     ^Boolean possibly-sensitive
-     ^Long in-reply-to-status-id
-     ^String place-id
-     ^java.io.File file
-     ^GeoLocation location]
-    :or
-    {display-coordinates false
-     in-reply-to-status-id -1
-     possibly-sensitive false}}]
-  (let [status-update (StatusUpdate. status)]
-    (-> status-update
-        (.displayCoordinates display-coordinates)
-        (.possiblySensitive possibly-sensitive)
-        (.inReplyToStatusId in-reply-to-status-id)
-        (.placeId place-id)
-        (.media file)
-        (.location location))))
+   {:keys [display-coordinates possibly-sensitive in-reply-to-status-id ^String place-id ^java.io.File file ^GeoLocation location]
+    :or {display-coordinates false  in-reply-to-status-id -1   possibly-sensitive false}}]
+  (-> (StatusUpdate. status)
+      (.displayCoordinates display-coordinates)
+      (.possiblySensitive possibly-sensitive)
+      (.inReplyToStatusId in-reply-to-status-id)
+      (.placeId place-id)
+      (.media file)
+      (.location location)))
+
+(defn make-o-embed-request
+  [status-id url &
+   {:keys [hide-media hide-thread omit-script lang max-width align related]
+    :or   {hide-media true  hide-thread true  omit-script false  max-width 0  align OEmbedRequest$Align/NONE} related []}]
+  (-> (OEmbedRequest. status-id url)
+                (.HideMedia hide-media)
+                (.HideThread hide-thread)
+                (.omitScript omit-script)
+                (.lang lang)
+                (.MaxWidth max-width)
+                (.align align)
+                (.related (into-array String related))))
 
 
 
@@ -94,8 +97,9 @@
 (defn retweetStatus [status-id]
   (twitter (.getretweetStatus status-id)))
 
-(defn get-o-embed [status-id url]
-  (twitter (.getOEmbed (OEmbedRequest. status-id url))))
+(defn get-o-embed
+  ([status-id url](twitter (.getOEmbed (OEmbedRequest. status-id url))))
+  ([^OEmbedRequest o-embed-request] (twitter (.getOEmbed o-embed-request))))
 
 (defn upload-media
   ([^java.io.File media-file]
