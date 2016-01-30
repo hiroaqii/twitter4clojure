@@ -8,25 +8,52 @@
 (defmacro twitter [f]
   `(-> twitter-instance ~f (data/from-java)))
 
+(def not-nil? (complement nil?))
+
+;;Maek Entyty Object
+(defn make-paging
+  [& {:keys [page cnt since-id max-id] :as all}]
+  (cond
+    (and page cnt since-id max-id) (Paging. page cnt since-id max-id)
+    (and page cnt since-id)        (Paging. page cnt since-id)
+    (and page cnt)                 (Paging. page cnt)
+    (and page since-id)            (Paging. page since-id)
+    (not-nil? page)                (Paging. page)
+    (not-nil? since-id)            (Paging. since-id)
+    :else                          (Paging.)))
+
+
 ;Timeline Resources
-(defn get-mentions-timeline []
-  (twitter (.getMentionsTimeline)))
+(defn get-mentions-timeline
+  ([](twitter (.getMentionsTimeline)))
+  ([^Paging paging] (twitter (.getMentionsTimeline paging))))
 
 (defn get-user-timeline
-  ([] (twitter (.getUserTimeline)))
-  ([^String user] (twitter (.getUserTimeline user))))
+  [& {:keys [user-id screen-name ^Paging paging] :as all}]
+  (let [id-or-name (if user-id user-id screen-name)]
+    (cond
+      (nil? all) (twitter (.getUserTimeline))
+      (and id-or-name paging) (twitter (.getUserTimeline id-or-name paging))
+      (not-nil? id-or-name)   (twitter (.getUserTimeline id-or-name))
+      :else                   (twitter (.getUserTimeline paging)))))
 
-(defn get-home-timeline []
-  (twitter (.getHomeTimeline )))
+(defn get-home-timeline
+  ([] (twitter (.getHomeTimeline)))
+  ([^Paging paging] (twitter (.getHomeTimeline paging))))
 
-(defn get-retweets-of-me []
-  (twitter (.getRetweetsOfMe )))
+(defn get-retweets-of-me
+  ([](twitter (.getRetweetsOfMe)))
+  ([^Paging paging] (twitter (.getRetweetsOfMe))))
+
+
 
 ;Tweets Resources
 (defn get-retweets [status-id]
   (twitter (.getRetweets status-id)))
 
 (defn get-retweeter-ids
+  ([status-id]
+   (get-retweeter-ids -1))
   ([status-id cursor]
    (twitter (.getRetweeterIds status-id cursor)))
   ([status-id cnt cursor]
@@ -47,20 +74,28 @@
 (defn get-o-embed [status-id url]
   (twitter (.getOEmbed (OEmbedRequest. status-id url))))
 
-(defn upload-media [^java.io.File media-file]
-  (twitter (.uploadMedia media-file)))
+(defn upload-media
+  ([^java.io.File media-file]
+   (twitter (.uploadMedia media-file)))
+  ([^String file-name ^java.io.InputStream media]
+   (twitter (.uploadMedia file-name media))))
+
 
 ;Search Resources
 (defn search [s]
   (let [query (Query. s)]
     (twitter (.search query))))
 
-;Direct Message Resources
-(defn get-direct-messages []
-  (twitter (.getDirectMessages)))
 
-(defn get-sent-direct-messages []
-  (twitter (.getSentDirectMessages)))
+
+;Direct Message Resources
+(defn get-direct-messages
+  ([] (twitter (.getDirectMessages)))
+  ([^Paging paging] (twitter (.getDirectMessages paging))))
+
+(defn get-sent-direct-messages
+  ([] (twitter (.getSentDirectMessages)))
+  ([^Paging paging](twitter (.getSentDirectMessages))))
 
 (defn show-direct-message [direct-message-id]
   (twitter (.showDirectMessage [direct-message-id])))
@@ -68,27 +103,27 @@
 (defn destroy-direct-message [direct-message-id]
   (twitter (.destroyDirectMessage direct-message-id)))
 
-(defn send-direct-message [user-id text]
-  (twitter (.getsendDirectMessage user-id text)))
+(defn send-direct-message [id-or-name text]
+  (twitter (.getsendDirectMessage id-or-name text)))
+
+
 
 ;Friends & Followers
 (defn get-friends-ids
   [& {:keys [user-id screen-name cnt cursor] :or {cursor -1} :as all}]
-  (cond
-    (and user-id cnt)     (twitter (.getFriendsIDs user-id cursor cnt))
-    (some? user-id)       (twitter (.getFriendsIDs user-id cursor))
-    (and screen-name cnt) (twitter (.getFriendsIDs screen-name cursor cnt))
-    (some? screen-name)   (twitter (.getFriendsIDs screen-name cursor))
-    :else                 (twitter (.getFriendsIDs cursor))))
+  (let [id-or-name (if user-id user-id screen-name)]
+    (cond
+      (and id-or-name cnt)  (twitter (.getFriendsIDs id-or-name cursor cnt))
+      (not-nil? id-or-name) (twitter (.getFriendsIDs id-or-name cursor))
+      :else                 (twitter (.getFriendsIDs cursor)))))
 
 (defn get-followers-ids
   [& {:keys [user-id screen-name cnt cursor] :or {cursor -1} :as all}]
-  (cond
-    (and user-id cnt)     (twitter (.getFollowersIDs user-id cursor cnt))
-    (some? user-id)       (twitter (.getFollowersIDs user-id cursor))
-    (and screen-name cnt) (twitter (.getFollowersIDs screen-name cursor cnt))
-    (some? screen-name)   (twitter (.getFollowersIDs screen-name cursor))
-    :else                 (twitter (.getFollowersIDs cursor))))
+  (let [id-or-name (if user-id user-id screen-name)]
+    (cond
+      (and id-or-name cnt)  (twitter (.getFollowersIDs id-or-name cursor cnt))
+      (not-nil? id-or-name) (twitter (.getFollowersIDs id-or-name cursor))
+      :else                 (twitter (.getFollowersIDs cursor)))))
 
 (defn get-incoming-friendships
   ([] (get-incoming-friendships -1))
@@ -107,13 +142,12 @@
   (twitter (.destroyFriendship id-or-name)))
 
 (defn update-friendship
-  [& {:keys [user-id screen-name enable-device-notification retweets] :or {enable-device-notification false retweets false} :as all}]
-  (let [id-or-name (if (nil? user-id) screen-name user-id)]
-    (twitter (.updateFriendship id-or-name enable-device-notification retweets))))
+  [id-or-name enable-device-notification retweets]
+  (twitter (.updateFriendship id-or-name enable-device-notification retweets)))
 
 (defn show-friendship
-  [source target]
-  (twitter (.showFriendship source target)))
+  [source-id-or-name target-id-or-name]
+  (twitter (.showFriendship source-id-or-name target-id-or-name)))
 
 (defn get-friends-list
   [& {:keys [user-id screen-name cursor cnt skip-status include-user-entities]
@@ -131,6 +165,8 @@
    (.getFollowersList
     (if user-id user-id screen-name) cursor cnt skip-status include-user-entities)))
 
+
+
 ;Users Resources
 (defn get-account-settings []
   (twitter (.getAccountSettings)))
@@ -138,8 +174,9 @@
 (defn verify-credentials []
   (twitter (.verifyCredentials)))
 
-(defn get-blocks-list []
-  (twitter (.getBlocksList)))
+(defn get-blocks-list
+  ([] (twitter (.getBlocksList)))
+  ([cursor] (twitter (.getBlocksList cursor))))
 
 (defn get-blocks-ids []
   (twitter (.getBlocksIDs)))
@@ -153,7 +190,7 @@
 (defn show-user [user-id]
   (twitter (.showUser user-id)))
 
-(defn search-users [query page]
+(defn search-users [^String query ^Integer page]
   (twitter (.searchUsers query page)))
 
 (defn get-contributees [id-or-name]
@@ -182,6 +219,8 @@
   ([] (get-mutes-list -1))
   ([cursor] (twitter (.getMutesList cursor))))
 
+
+
 ;Suggested Users Resources
 (defn get-user-suggestions [category-slug]
   (twitter (.getUserSuggestions category-slug)))
@@ -192,9 +231,17 @@
 (defn get-member-suggestions [category-slug]
   (twitter (.getMemberSuggestions category-slug)))
 
+
+
 ;Favorites Resources
-(defn get-favorites []
-  (twitter (.getFavorites)))
+(defn get-favorites
+  [& {:keys [user-id screen-name ^Paging paging] :as all}]
+  (let [id-or-name (if user-id user-id screen-name)]
+    (cond
+      (and id-or-name paging) (twitter (.getFavorites id-or-name paging))
+      (not-nil? id-or-name)   (twitter (.getFavorites id-or-name))
+      (not-nil? paging)       (twitter (.getFavorites paging))
+      :else                   (twitter (.getFavorites)))))
 
 (defn destroy-favorite [status-id]
   (twitter (.destroyFavorite status-id)))
@@ -202,14 +249,16 @@
 (defn create-favorite [status-id]
   (twitter (.createFavorite status-id)))
 
+
+
 ;Lists Resources
 (defn get-user-lists
   ([id-or-name] (get-user-lists id-or-name false))
   ([id-or-name reverse] (twitter (.getUserLists id-or-name reverse))))
 
 (defn get-user-list-statuses
-  ([id ^Paging paging]
-   (twitter (.getUserListStatuses id paging)))
+  ([list-id ^Paging paging]
+   (twitter (.getUserListStatuses list-id paging)))
   ([id-or-name slug ^Paging paging]
    (twitter (.getUserListStatuses id-or-name slug paging))))
 
@@ -299,6 +348,8 @@
   ([id-or-name cnt cursor]
    (twitter (.getUserListSubscriptions id-or-name cnt cursor))))
 
+
+
 ;Saved Searches Resources
 (defn get-saved-searches []
   (twitter (.getSavedSearches)))
@@ -312,6 +363,8 @@
 (defn destroy-saved-search [saved-search-id]
   (twitter (.destroySavedSearch saved-search-id)))
 
+
+
 ;Places & Geo Resourcs
 (defn get-geo-details [place-id]
   (twitter (.getGeoDetails place-id)))
@@ -324,6 +377,8 @@
   (let [query (GeoQuery. (GeoLocation. latitude longitude))]
     (twitter (.searchPlaces query))))
 
+
+
 ;Trends Resources
 (defn get-place-trends [woeid]
   (twitter (.getPlaceTrends woeid)))
@@ -335,9 +390,13 @@
   (let [location (GeoLocation. latitude longitude)]
     (twitter (.getClosestTrends location))))
 
+
+
 ;Spam Reporting Resource
 (defn report-spam [screen-name]
   (twitter (.reportSpam screen-name)))
+
+
 
 ;Help Resources
 (defn get-api-configuration []
