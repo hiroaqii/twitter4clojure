@@ -121,6 +121,7 @@
    (twitter (.uploadMedia file-name media))))
 
 
+
 ;Search Resources
 (defn search [query]
   (if (= (class query) Query)
@@ -165,6 +166,11 @@
       (and id-or-name cnt)  (twitter (.getFollowersIDs id-or-name cursor cnt))
       (not-nil? id-or-name) (twitter (.getFollowersIDs id-or-name cursor))
       :else                 (twitter (.getFollowersIDs cursor)))))
+
+(defn lookup-friendships [ids-or-names]
+  (let [clazz (class (first ids-or-names))
+        array (into-array (if (= clazz String) String Long) ids-or-names)]
+    (twitter (.lookupFriendships array))))
 
 (defn get-incoming-friendships
   ([] (get-incoming-friendships -1))
