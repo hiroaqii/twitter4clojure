@@ -23,6 +23,7 @@
     :else                          (Paging.)))
 
 
+
 ;Timeline Resources
 (defn get-mentions-timeline
   ([](twitter (.getMentionsTimeline)))
