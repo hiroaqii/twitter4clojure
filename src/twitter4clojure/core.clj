@@ -221,7 +221,12 @@
 (defn verify-credentials []
   (twitter (.verifyCredentials)))
 
-(defn updateProfile [name url location desc]
+(defn update-account-settings
+  [trend-location-woeid sleep-time-enabled start-sleep-time end-sleep-time time-zone lang]
+  (twitter
+   (.updateAccountSettings trend-location-woeid sleep-time-enabled start-sleep-time end-sleep-time time-zone lang)))
+
+(defn update-profile [name url location desc]
   (twitter (.updateProfile name url location desc)))
 
 (defn update-profile-background-image [image tile]
