@@ -221,12 +221,11 @@
 (defn verify-credentials []
   (twitter (.verifyCredentials)))
 
-(defn get-blocks-list
-  ([] (twitter (.getBlocksList)))
-  ([cursor] (twitter (.getBlocksList cursor))))
+(defn updateProfile [name url location desc]
+  (twitter (.updateProfile name url location desc)))
 
 (defn update-profile-background-image [image tile]
-  (twitter (.updateProfileBackgroundImage image tile)))
+  (twitter (.updateProfileBackgroundImage image tile)));
 
 (defn update-profile-colors
   [back-ground txt link sidebar-fill sidebar-border]
@@ -234,6 +233,10 @@
 
 (defn update-profile-image [image]
   (twitter (.updateProfileImage image)))
+
+(defn get-blocks-list
+  ([] (twitter (.getBlocksList)))
+  ([cursor] (twitter (.getBlocksList cursor))))
 
 (defn get-blocks-ids []
   (twitter (.getBlocksIDs)))
