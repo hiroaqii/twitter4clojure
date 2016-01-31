@@ -252,6 +252,11 @@
 (defn destroy-block [id-or-name]
   (twitter (.destroyBlock id-or-name)))
 
+(defn lookup-users [ids-or-names]
+  (let [clazz (class (first ids-or-names))
+        array (into-array (if (= clazz String) String Long) ids-or-names)]
+    (twitter (.lookupUsers array)))
+
 (defn show-user [user-id]
   (twitter (.showUser user-id)))
 
