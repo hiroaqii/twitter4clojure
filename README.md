@@ -1,14 +1,12 @@
 # twitter4clojure
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure wrapper for Twitter4J 
+
+[![Clojars Project](https://clojars.org/twitter4clojure/latest-version.svg)](https://clojars.org/twitter4clojure)
 
 ## Usage
 
-FIXME
 
 ## License
 
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License, the same as Clojure.
