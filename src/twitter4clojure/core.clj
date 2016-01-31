@@ -255,7 +255,7 @@
 (defn lookup-users [ids-or-names]
   (let [clazz (class (first ids-or-names))
         array (into-array (if (= clazz String) String Long) ids-or-names)]
-    (twitter (.lookupUsers array)))
+    (twitter (.lookupUsers array))))
 
 (defn show-user [user-id]
   (twitter (.showUser user-id)))
@@ -408,9 +408,9 @@
 
 (defn update-user-list
   ([list-id new-list-name is-public-list new-desc]
-   (twitter (.updateUserList list-id new-list-name is-public new-desc)))
+   (twitter (.updateUserList list-id new-list-name is-public-list new-desc)))
   ([id-or-name slug new-list-name is-public-list new-desc]
-   (twitter (.updateUserList id-or-name slug new-list-name is-public new-desc))))
+   (twitter (.updateUserList id-or-name slug new-list-name is-public-list new-desc))))
 
 (defn create-user-list
   [list-name is-public desc]

@@ -1,4 +1,4 @@
-(defproject twitter4clojure "0.2.0"
+(defproject twitter4clojure "0.2.1"
   :description "A clojure wrapper for Twitter4J"
   :url "https://github.com/hiroaqii/twitter4clojure"
   :license {:name "Eclipse Public License"
