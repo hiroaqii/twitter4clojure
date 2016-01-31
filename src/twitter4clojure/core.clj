@@ -225,6 +225,9 @@
   ([] (twitter (.getBlocksList)))
   ([cursor] (twitter (.getBlocksList cursor))))
 
+(defn update-profile-background-image [image tile]
+  (twitter (.updateProfileBackgroundImage image tile)))
+
 (defn update-profile-colors
   [back-ground txt link sidebar-fill sidebar-border]
   (twitter (.updateProfileColors back-ground txt link sidebar-fill sidebar-border)))
