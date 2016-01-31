@@ -225,6 +225,9 @@
   ([] (twitter (.getBlocksList)))
   ([cursor] (twitter (.getBlocksList cursor))))
 
+(defn update-profile-image [image]
+  (twitter (.updateProfileImage image)))
+
 (defn get-blocks-ids []
   (twitter (.getBlocksIDs)))
 
